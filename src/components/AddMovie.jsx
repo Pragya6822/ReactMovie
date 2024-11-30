@@ -1,18 +1,25 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const AddMovie = () => {
-
     const [movie, setMovie] = useState({title:"", description:"", year:""})
+    const navigate = useNavigate() // initialize the navigate hook
 
     function handleChange(e){
         // console.log(e)
         const {name, value} = e.target;
-        setMovie({...movie, [name]:value}); // title
+        setMovie({...movie, [name]:value}); // title , update movie state
     }
 
     async function handleAdd(){
-        await axios.post('https://fir-e0ae3-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json', movie)
+        try {
+          await axios.post('https://fir-e0ae3-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json', movie)
+          alert('Movie added successfully')
+          navigate('/')   // Connect the path to your movielist route
+        } catch (error) {
+          console.log(error)
+        } 
     }
 
   return (
@@ -26,4 +33,4 @@ const AddMovie = () => {
   )
 }
 
-export default AddMovie
+export default AddMovie;

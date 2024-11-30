@@ -1,11 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
+
 
 const EditMovie = () => {
   const { id } = useParams(); // url --> it will aces the url
   const [movie, setMovie] = useState({ title: "", description: "", year: "" });
   // console.log(id);
+  const navigate = useNavigate() // initialize the navigate hook
+
 
   async function getMovie() {
     let res = await axios.get(
@@ -21,7 +25,13 @@ const EditMovie = () => {
   }
 
   async function handleUpdate(){
-    await axios.put(`https://fir-e0ae3-default-rtdb.asia-southeast1.firebasedatabase.app/movies/${id}.json`, movie)
+    try {
+      await axios.put(`https://fir-e0ae3-default-rtdb.asia-southeast1.firebasedatabase.app/movies/${id}.json`, movie)
+      alert('Movie updated successfully')
+      navigate('/')   // Connect the path to your movielist route
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import { AdminContext } from '../context/AdminContext';
 const MoviesList = () => {
     const [movies, setMovies] = useState([]);
     const {isAdmin, setIsAdmin} = useContext(AdminContext);
+    
     async function getMovies(){
         try {
             let res  = await axios.get('https://fir-e0ae3-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json');
@@ -18,25 +19,29 @@ const MoviesList = () => {
     
             setMovies([...arr]);
         } catch (error) {
-            
+            console.error(error);
         }
     }
 
     async function handleDelete(id){
-        await axios.delete(`https://fir-e0ae3-default-rtdb.asia-southeast1.firebasedatabase.app/movies/${id}.json`);
-        getMovies()
+        try {
+            await axios.delete(`https://fir-e0ae3-default-rtdb.asia-southeast1.firebasedatabase.app/movies/${id}.json`);
+            getMovies()
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     useEffect(()=>{
         getMovies()
     },[])
   return (
-    <div>
+    <div >
         <button onClick={()=> setIsAdmin(!isAdmin)}>{isAdmin ? "You are a admin" : "CLick the button to become admin"}</button>
         <h1>Movies List</h1>
-        <div>
+        <div className='movie-container'>
             {movies.map((movie)=>(
-                <div key={movie.id}>
+                <div key={movie.id} className='movie-item'>
                     <h4>{movie.title}</h4>
                     <p>{movie.description}</p>
                     <p>{movie.year}</p>
